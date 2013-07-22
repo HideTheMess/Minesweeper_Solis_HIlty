@@ -84,14 +84,17 @@ class Tile
       @board.gameover == true
     end
 
-    q = []
-    q += neighbors
+    return if bomb_count > 0
 
-    until q.empty?
-      tile = q.shift
+    queue = []
+    queue += neighbors
+
+    until queue.empty?
+      tile = queue.shift
       if tile.bomb_count == 0
         tile.revealed = true
-        q.concat(tile.neighbors)
+        queue.concat(tile.neighbors)
+        queue.delete_if { |neigh| neigh.revealed }
       else
         tile.revealed = true
       end
@@ -129,8 +132,8 @@ class Tile
   def to_s
     if @flag
       return 'P'
-    elsif bomb?
-      return '*'
+    # elsif bomb?
+#       return '*'
     elsif !@revealed
       return 'H'
     # elsif bomb?

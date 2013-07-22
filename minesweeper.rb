@@ -60,6 +60,12 @@ class Board
   end
 end
 
+
+
+
+
+
+#---------------------------------------------------------------
 class Tile
   attr_accessor :bomb, :revealed
 
@@ -72,16 +78,25 @@ class Tile
   end
 
   def reveal
+    @revealed = true
 
     if bomb
       @board.gameover == true
     end
 
+    q = []
+    q += neighbors
 
+    until q.empty?
+      tile = q.shift
+      if tile.bomb_count == 0
+        tile.revealed = true
+        q.concat(tile.neighbors)
+      else
+        tile.revealed = true
+      end
+    end
 
-
-
-    neighbors.each { |neighbor| neighbor.reveal } if no bomb or no bomb nearby
   end
 
   def bomb_count
@@ -95,12 +110,21 @@ class Tile
     @bomb
   end
 
+
+
   def neighbors
     diff_array = [[-1, 1], [0, 1], [1, 1], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1]]
 
     neigh_pos = diff_array.map { |r_move, c_move| [@pos[0] + r_move, @pos[1] + c_move] }
+    neigh_pos.select! do |row, col|
+      row.between?(0, 8) && col.between?(0, 8)
+    end
     neigh_pos.map { |row, col| @board.board[row][col] }
   end
+
+
+
+
 
   def to_s
     if @flag

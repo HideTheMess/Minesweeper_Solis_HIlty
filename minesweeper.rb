@@ -1,5 +1,5 @@
 class Board
-  attr_accessor :gameover
+  attr_accessor :board, :gameover
 
   def initialize(bomb_count = 10)
     @board = populate_board
@@ -21,7 +21,7 @@ class Board
 
   def play
     until @gameover
-      # Display board
+      print_board
       # Get user input
       # Let reveal do its thing
     end
@@ -43,24 +43,27 @@ class Board
 
   def print_board
     puts '  -------------------'
-    puts "8 |# # # # # # # # #|"
-    puts "7 |# # # # # # # # #|"
-    puts "6 |# # # # # # #    |"
-    puts "5 |# # # # # # #    |"
-    puts "4 |# # # # 5 # # #  |"
-    puts "3 |# # # 1     # # #|"
-    puts "2 |# # #       2 # #|"
-    puts "1 |# # # # # # # # #|"
-    puts "0 |# # # # # # # # #|"
+    puts "8 |#{@board[8].join(' ')}|"
+    puts "7 |#{@board[7].join(' ')}|"
+    puts "6 |#{@board[6].join(' ')}|"
+    puts "5 |#{@board[5].join(' ')}|"
+    puts "4 |#{@board[4].join(' ')}|"
+    puts "3 |#{@board[3].join(' ')}|"
+    puts "2 |#{@board[2].join(' ')}|"
+    puts "1 |#{@board[1].join(' ')}|"
+    puts "0 |#{@board[0].join(' ')}|"
     puts '  -------------------'
     puts "   0 1 2 3 4 5 6 7 8"
+  end
+
+  def to_s
   end
 end
 
 class Tile
-  attr_accessor :bomb
+  attr_accessor :bomb, :revealed
 
-  def initialize(x, y, board
+  def initialize(x, y, board)
     @flag = false
     @pos = [x, y]
     @board = board
@@ -82,17 +85,35 @@ class Tile
   end
 
   def bomb_count
-    neighbors.inject(0) { |accum, neigh| accum + 1 if neigh.bomb? }
+    accum = 0
+
+    neighbors.each { |neigh| accum += 1 if neigh.bomb? }
+    accum
   end
 
   def bomb?
     @bomb
   end
 
-  def neigbors
+  def neighbors
     diff_array = [[-1, 1], [0, 1], [1, 1], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1]]
 
-    neigh_pos = diff_array.map { |x_move, y_move| [self.x + x_move, self.y + y_move] }
-    neigh_pos.map { |x, y| @board[x][y] }
+    neigh_pos = diff_array.map { |x_move, y_move| [@pos[0] + x_move, @pos[1] + y_move] }
+    neigh_pos.map { |x, y| @board.board[x][y] }
+  end
+
+  def to_s
+    if @flag
+      return 'P'
+    elsif !@revealed
+      return '#'
+    else
+      # numbers
+      if bomb_count > 0 # bomb_count
+        return bomb_count.to_s
+      else
+        return ' '
+      end
+    end
   end
 end

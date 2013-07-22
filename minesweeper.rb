@@ -105,8 +105,12 @@ class Tile
   def to_s
     if @flag
       return 'P'
+    elsif bomb?
+      return '*'
     elsif !@revealed
-      return '#'
+      return 'H'
+    # elsif bomb?
+#       return '*'
     else
       # numbers
       if bomb_count > 0 # bomb_count

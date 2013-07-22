@@ -1,11 +1,10 @@
 class Board
+  attr_accessor :gameover
 
   def initialize(bomb_count = 10)
     @board = populate_board
     @bombs = bomb_count
-  end
-
-  def play
+    @gameover = false
   end
 
   def populate_board
@@ -20,6 +19,22 @@ class Board
     board
   end
 
+  def play
+    until @gameover
+      # Display board
+      # Get user input
+      # Let reveal do its thing
+    end
+
+    if won?
+      puts 'good job'
+      return
+    else
+      puts 'u suck'
+      return
+    end
+  end
+
   def place_bombs
     (0..8).to_a.repeated_permutation(2).entries.shuffle[0...@bombs].each do |x, y|
       @board[x][y].bomb = true
@@ -27,7 +42,18 @@ class Board
   end
 
   def print_board
-
+    puts '  -------------------'
+    puts "8 |# # # # # # # # #|"
+    puts "7 |# # # # # # # # #|"
+    puts "6 |# # # # # # #    |"
+    puts "5 |# # # # # # #    |"
+    puts "4 |# # # # 5 # # #  |"
+    puts "3 |# # # 1     # # #|"
+    puts "2 |# # #       2 # #|"
+    puts "1 |# # # # # # # # #|"
+    puts "0 |# # # # # # # # #|"
+    puts '  -------------------'
+    puts "   0 1 2 3 4 5 6 7 8"
   end
 end
 
@@ -45,7 +71,7 @@ class Tile
   def reveal
 
     if bomb
-      @board.gameover
+      @board.gameover == true
     end
 
 

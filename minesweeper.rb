@@ -9,10 +9,10 @@ class Board
 
   def populate_board
     board = []
-    9.times do |x|
+    9.times do |row|
       temp_array = []
-      9.times do |y|
-        temp_array << Tile.new(x, y, self) # Maybe '@board'?
+      9.times do |col|
+        temp_array << Tile.new(row, col, self) # Maybe '@board'?
       end
       board << temp_array
     end
@@ -36,8 +36,8 @@ class Board
   end
 
   def place_bombs
-    (0..8).to_a.repeated_permutation(2).entries.shuffle[0...@bombs].each do |x, y|
-      @board[x][y].bomb = true
+    (0..8).to_a.repeated_permutation(2).entries.shuffle[0...@bombs].each do |r, c|
+      @board[r][c].bomb = true
     end
   end
 
@@ -63,9 +63,9 @@ end
 class Tile
   attr_accessor :bomb, :revealed
 
-  def initialize(x, y, board)
+  def initialize(row, col, board)
     @flag = false
-    @pos = [x, y]
+    @pos = [row, col]
     @board = board
     @bomb = false
     @revealed = false
@@ -98,8 +98,8 @@ class Tile
   def neighbors
     diff_array = [[-1, 1], [0, 1], [1, 1], [-1, 0], [1, 0], [-1, -1], [0, -1], [1, -1]]
 
-    neigh_pos = diff_array.map { |x_move, y_move| [@pos[0] + x_move, @pos[1] + y_move] }
-    neigh_pos.map { |x, y| @board.board[x][y] }
+    neigh_pos = diff_array.map { |r_move, c_move| [@pos[0] + r_move, @pos[1] + c_move] }
+    neigh_pos.map { |row, col| @board.board[row][col] }
   end
 
   def to_s

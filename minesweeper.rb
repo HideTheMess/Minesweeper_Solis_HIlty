@@ -1,3 +1,5 @@
+require 'yaml'
+
 class Board
   attr_accessor :board, :gameover
 
@@ -60,7 +62,17 @@ class Board
   end
 
   def save_game
+    yam = self.to_yaml
+    f = File.open('minesweeper.yml', 'w')
+    f.print(yam)
+    f.close
+  end
 
+  def load_game
+    f = File.open('minesweeper.yml', 'r')
+    yaml_output = YAML.load(f)
+    f.close
+    yaml_output
   end
 end
 

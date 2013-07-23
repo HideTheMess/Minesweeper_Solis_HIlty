@@ -58,6 +58,10 @@ class Board
 
   def to_s
   end
+
+  def save_game
+
+  end
 end
 
 
@@ -78,6 +82,7 @@ class Tile
   end
 
   def reveal
+    return if @flag
     @revealed = true
 
     if bomb
@@ -100,6 +105,10 @@ class Tile
       end
     end
 
+  end
+
+  def flag
+    @flag = !@flag
   end
 
   def bomb_count

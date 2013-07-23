@@ -1,7 +1,7 @@
 require 'yaml'
 
 class Board
-  attr_accessor :board, :gameover
+  attr_accessor :board
 
   def initialize(bomb_count = 10)
     @board = populate_board
@@ -22,10 +22,16 @@ class Board
   end
 
   def play
-    until @gameover
+    place_bombs
+
+    until @gameover || won?
+      p "gameover = #{@gaveover}"
       print_board
-      # Get user input
-      # Let reveal do its thing
+      puts ''
+      puts 'Coordinates? (comma separated)'
+      coord = gets.chomp.split(',').map(&:to_i)
+      r, c = coord
+      @board[r][c].reveal
     end
 
     if won?
@@ -35,6 +41,17 @@ class Board
       puts 'u suck'
       return
     end
+  end
+
+  def won?
+    board.each do |row|
+      row.each do |tile|
+        cond1 = (tile.revealed == true && tile.bomb == false)
+        cond2 = (tile.revealed == false && tile.bomb == true)
+        return false unless cond1 || cond2
+      end
+    end
+    true
   end
 
   def place_bombs
@@ -74,6 +91,10 @@ class Board
     f.close
     yaml_output
   end
+
+  def gameover
+    @gameover = true
+  end
 end
 
 
@@ -97,8 +118,8 @@ class Tile
     return if @flag
     @revealed = true
 
-    if bomb
-      @board.gameover == true
+    if bomb?
+      @board.gameover
     end
 
     return if bomb_count > 0
